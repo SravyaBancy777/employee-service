@@ -40,6 +40,12 @@ public class EmployeeController {
     }
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EmployeeResponseModel> createEmployee(@Valid @RequestBody EmployeeRequestModel employeeDetails){
+
+        String email = employeeDetails.getEmail();
+        if(employeeService.getEmployeeByEmail(email) != null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         EmployeeDto employeeDto = modelMapper.map(employeeDetails, EmployeeDto.class);
